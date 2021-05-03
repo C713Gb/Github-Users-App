@@ -1,4 +1,4 @@
 package com.banerjee.githublistings.viewmodel;
 
-public class SIgnInViewModel {
+public class SignInViewModel {
 }
