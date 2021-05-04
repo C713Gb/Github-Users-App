@@ -1,5 +1,6 @@
 package com.banerjee.githublistings.network;
 
+import com.banerjee.githublistings.network.model.RepoItem;
 import com.banerjee.githublistings.network.model.UserItem;
 import com.banerjee.githublistings.network.model.UserResponse;
 
@@ -21,4 +22,8 @@ public interface ApiCallInterface {
 
     @GET(value = "/users/{user_name}/followers")
     Call<List<UserItem>> getFollowers(@Path(value = "user_name", encoded = true) String userName);
+
+    @GET(value = "/users/{user_name}/repos")
+    Call<List<RepoItem>> getRepos(@Path(value = "user_name", encoded = true) String userName);
+
 }

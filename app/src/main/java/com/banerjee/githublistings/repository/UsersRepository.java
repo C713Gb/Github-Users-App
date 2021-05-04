@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.banerjee.githublistings.network.ApiCallInterface;
 import com.banerjee.githublistings.network.RetrofitClientInstance;
+import com.banerjee.githublistings.network.model.RepoItem;
 import com.banerjee.githublistings.network.model.UserItem;
 import com.banerjee.githublistings.network.model.UserResponse;
 import com.banerjee.githublistings.utils.Constants;
@@ -24,6 +25,7 @@ public class UsersRepository {
     private final ApiCallInterface apiCallInterface;
     private final String TAG = Constants.TAG;
     private List<UserItem> list;
+    private List<RepoItem> repoList;
 
     public UsersRepository() {
         apiCallInterface = RetrofitClientInstance
@@ -87,6 +89,40 @@ public class UsersRepository {
 
                 @Override
                 public void onFailure(Call<List<UserItem>> call, Throwable t) {
+                    Log.d(TAG, "onFailure: "+t.getMessage());
+                    t.printStackTrace();
+                }
+            });
+
+        } catch (Exception e){
+            Log.d(TAG, "loadJSON: "+e.getMessage());
+            e.printStackTrace();
+        }
+        return listMutableLiveData;
+    }
+
+    public MutableLiveData<List<RepoItem>> getRepos(String userName) {
+        MutableLiveData<List<RepoItem>> listMutableLiveData = new MutableLiveData<>();
+        repoList = new ArrayList<>();
+        try {
+
+            Call<List<RepoItem>> call = apiCallInterface.getRepos(userName);
+            call.enqueue(new Callback<List<RepoItem>>() {
+                @Override
+                public void onResponse(Call<List<RepoItem>> call, Response<List<RepoItem>> response) {
+                    if (!response.isSuccessful()){
+                        Log.d(TAG, "onResponse: Failed");
+                        return;
+                    }
+
+                    Log.d(TAG, "onResponse: Success");
+
+                    repoList = response.body();
+                    listMutableLiveData.setValue(repoList);
+                }
+
+                @Override
+                public void onFailure(Call<List<RepoItem>> call, Throwable t) {
                     Log.d(TAG, "onFailure: "+t.getMessage());
                     t.printStackTrace();
                 }
