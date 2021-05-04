@@ -17,8 +17,8 @@ public interface ApiCallInterface {
     Call<UserResponse> getUsers(@Query("q") String language,
                                 @Query("page") int pageNo);
 
-    @GET(value = "/search/users")
-    Call<UserResponse> getUser(@Query("q") String userName);
+    @GET(value = "/users/{user_name}")
+    Call<UserItem> getUser(@Path(value = "user_name", encoded = true) String userName);
 
     @GET(value = "/users/{user_name}/followers")
     Call<List<UserItem>> getFollowers(@Path(value = "user_name", encoded = true) String userName);

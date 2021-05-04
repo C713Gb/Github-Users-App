@@ -33,6 +33,41 @@ public class UsersRepository {
                 .create(ApiCallInterface.class);
     }
 
+    public MutableLiveData<List<UserItem>> searchUser(String userName) {
+        MutableLiveData<List<UserItem>> listMutableLiveData = new MutableLiveData<>();
+        list = new ArrayList<>();
+        try {
+
+            Call<UserItem> call = apiCallInterface.getUser(userName);
+            call.enqueue(new Callback<UserItem>() {
+                @Override
+                public void onResponse(Call<UserItem> call, Response<UserItem> response) {
+                    if (!response.isSuccessful()){
+                        Log.d(TAG, "onResponse: Failed");
+                        listMutableLiveData.setValue(list);
+                        return;
+                    }
+
+                    Log.d(TAG, "onResponse: Success");
+
+                    list.add(response.body());
+                    listMutableLiveData.setValue(list);
+                }
+
+                @Override
+                public void onFailure(Call<UserItem> call, Throwable t) {
+                    Log.d(TAG, "onFailure: "+t.getMessage());
+                    t.printStackTrace();
+                }
+            });
+
+        } catch (Exception e){
+            Log.d(TAG, "loadJSON: "+e.getMessage());
+            e.printStackTrace();
+        }
+        return listMutableLiveData;
+    }
+
     public MutableLiveData<List<UserItem>> getUsers(String language, int pageNo) {
         MutableLiveData<List<UserItem>> listMutableLiveData = new MutableLiveData<>();
         list = new ArrayList<>();

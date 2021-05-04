@@ -59,25 +59,22 @@ public class UserDetailsActivity extends AppCompatActivity {
         TextView repoLanguage = dialog.findViewById(R.id.language_txt);
         TextView repoCreated = dialog.findViewById(R.id.created_at_txt);
 
-        repoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(Constants.TAG, "onItemClick: "+repoItemList.get(position).getName());
-                RepoItem repoItem = repoItemList.get(position);
-                dialog.show();
-                repoName.setText(repoItem.getName());
-                repoCreated.setText(repoItem.getCreatedAt());
+        repoList.setOnItemClickListener((parent, view, position, id) -> {
+            Log.d(Constants.TAG, "onItemClick: "+repoItemList.get(position).getName());
+            RepoItem repoItem = repoItemList.get(position);
+            dialog.show();
+            repoName.setText(repoItem.getName());
+            repoCreated.setText(repoItem.getCreatedAt());
 
-                if (repoItem.getStargazersCount() == null)
-                    repoStars.setText("0");
-                else repoStars.setText(repoItem.getStargazersCount());
-                if (repoItem.getWatchersCount() == null)
-                    repoWatchers.setText("0");
-                else repoWatchers.setText(repoItem.getWatchersCount());
-                if (repoItem.getLanguage() == null)
-                    repoLanguage.setText("None");
-                else repoLanguage.setText(repoItem.getLanguage());
-            }
+            if (repoItem.getStargazersCount() == null)
+                repoStars.setText("0");
+            else repoStars.setText(repoItem.getStargazersCount());
+            if (repoItem.getWatchersCount() == null)
+                repoWatchers.setText("0");
+            else repoWatchers.setText(repoItem.getWatchersCount());
+            if (repoItem.getLanguage() == null)
+                repoLanguage.setText("None");
+            else repoLanguage.setText(repoItem.getLanguage());
         });
 
         userDetailsViewModel = new ViewModelProvider(this).get(UserDetailsViewModel.class);

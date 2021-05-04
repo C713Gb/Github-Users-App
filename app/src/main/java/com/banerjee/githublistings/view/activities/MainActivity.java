@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         progressBar = findViewById(R.id.loading);
         list = new ArrayList<>();
+        TextView searchUser = findViewById(R.id.search_txt);
+        searchUser.setOnClickListener(v -> {
+            goToSearch();
+        });
 
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
 
@@ -95,6 +100,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void goToSearch() {
+        startActivity(new Intent(MainActivity.this, SearchActivity.class));
     }
 
     private void getData(){
