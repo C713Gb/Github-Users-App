@@ -18,12 +18,14 @@ import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
+    private final OnItemClickListener listener;
     List<UserItem> items;
     Context context;
 
-    public UserAdapter(List<UserItem> items, Context context) {
+    public UserAdapter(List<UserItem> items, Context context, OnItemClickListener listener) {
         this.items = items;
         this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -35,12 +37,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull UserAdapter.ViewHolder holder, int position) {
-        holder.bind(items.get(position));
+        holder.bind(items.get(position), listener);
     }
 
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(UserItem item);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -56,7 +62,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             imageView = itemView.findViewById(R.id.profile_img);
         }
 
-        public void bind(UserItem userItem) {
+        public void bind(UserItem userItem, OnItemClickListener listener) {
 
             name.setText(userItem.getLogin());
             githubLink.setText(userItem.getHtmlUrl());
@@ -65,6 +71,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                     .load(userItem.getAvatarUrl())
                     .circleCrop()
                     .into(imageView);
+
+            itemView.setOnClickListener(v -> listener.onItemClick(userItem));
 
         }
     }

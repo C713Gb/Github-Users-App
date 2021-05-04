@@ -1,5 +1,6 @@
 package com.banerjee.githublistings.view.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ApiCallInterface apiCallInterface;
     private RecyclerView recyclerView;
     private UsersViewModel usersViewModel;
-    private boolean isLoading = false, isScrolling = false, isLastPage = false;
+    private boolean isLoading = false, isScrolling = false;
     private ProgressBar progressBar;
 
     @Override
@@ -48,10 +49,16 @@ public class MainActivity extends AppCompatActivity {
 
         usersViewModel.getAllUsers();
         usersViewModel.listMutableLiveData.observe(this, usersList -> {
-            Log.d(TAG, "onCreate: Users = "+usersList.size());
             list = usersList;
             progressBar.setVisibility(View.GONE);
-            adapter = new UserAdapter(list, this);
+            adapter = new UserAdapter(list, this, new UserAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(UserItem item) {
+                    Intent intent = new Intent(MainActivity.this, UserDetailsActivity.class);
+                    intent.putExtra("userItem", item);
+                    startActivity(intent);
+                }
+            });
             recyclerView.setAdapter(adapter);
         });
 
@@ -73,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 int visibleItemCount = linearLayoutManager.getChildCount();
                 int totalItemCount = linearLayoutManager.getItemCount();
 
-                boolean isNotLoadingAndNotLastPage = !isLoading && !isLastPage;
+                boolean isNotLoadingAndNotLastPage = !isLoading;
                 boolean isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount;
                 boolean isNotAtBeginning = firstVisibleItemPosition >= 0;
                 boolean shouldPaginate = isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning
@@ -93,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
     private void getData(){
         usersViewModel.getAllUsers();
         usersViewModel.listMutableLiveData.observe(this, usersList -> {
-            Log.d(TAG, "onCreate: Users = "+usersList.size());
             progressBar.setVisibility(View.GONE);
             list.addAll(usersList);
             adapter.notifyDataSetChanged();

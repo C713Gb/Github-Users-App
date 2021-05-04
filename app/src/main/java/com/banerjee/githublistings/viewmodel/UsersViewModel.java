@@ -41,7 +41,6 @@ public class UsersViewModel extends ViewModel {
                 list.addAll(usersList);
             }
             listMutableLiveData.setValue(list);
-            Log.d(Constants.TAG, "getAllUsers: " + list.size());
         });
 
     }

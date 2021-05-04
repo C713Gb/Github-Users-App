@@ -64,4 +64,38 @@ public class UsersRepository {
         }
         return listMutableLiveData;
     }
+
+    public MutableLiveData<List<UserItem>> getFollowers(String userName){
+        MutableLiveData<List<UserItem>> listMutableLiveData = new MutableLiveData<>();
+        list = new ArrayList<>();
+        try {
+
+            Call<List<UserItem>> call = apiCallInterface.getFollowers(userName);
+            call.enqueue(new Callback<List<UserItem>>() {
+                @Override
+                public void onResponse(Call<List<UserItem>> call, Response<List<UserItem>> response) {
+                    if (!response.isSuccessful()){
+                        Log.d(TAG, "onResponse: Failed");
+                        return;
+                    }
+
+                    Log.d(TAG, "onResponse: Success");
+
+                    list = response.body();
+                    listMutableLiveData.setValue(list);
+                }
+
+                @Override
+                public void onFailure(Call<List<UserItem>> call, Throwable t) {
+                    Log.d(TAG, "onFailure: "+t.getMessage());
+                    t.printStackTrace();
+                }
+            });
+
+        } catch (Exception e){
+            Log.d(TAG, "loadJSON: "+e.getMessage());
+            e.printStackTrace();
+        }
+        return listMutableLiveData;
+    }
 }
